@@ -1,1 +1,38 @@
+def is_year_leap(year):
+    if (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0):
+        return True
+    else:
+        return False
 
+def days_in_month(year, month):
+    if month < 1 or month > 12 or year < 1:
+        return None
+    dias_por_mes = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    if is_year_leap(year) and month == 2:
+        return 29
+    return dias_por_mes[month]
+
+def day_of_year(year, month, day):
+    # 1. Validar si el mes es correcto
+    if month < 1 or month > 12:
+        return None
+    
+    # 2. Validar si el día es correcto para ese mes y año
+    max_dias = days_in_month(year, month)
+    if day < 1 or day > max_dias:
+        return None
+    
+    # 3. Sumar los días de los meses completos anteriores
+    dia_total = 0
+    for m in range(1, month):
+        dia_total += days_in_month(year, m)
+    
+    # 4. Sumar el día actual
+    return dia_total + day
+
+# Casos de prueba
+print(day_of_year(2000, 12, 31))  # Esperado: 366 (Año bisiesto)
+print(day_of_year(2001, 12, 31))  # Esperado: 365
+print(day_of_year(2026, 7, 1))    # Esperado: 182
+print(day_of_year(2026, 2, 29))   # Esperado: None (No es año bisiesto)
+print(day_of_year(2000, 2, 29))   # Esperado: 60
